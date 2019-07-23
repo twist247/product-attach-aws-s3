@@ -32,6 +32,9 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
+    const STORAGE_TYPE_AWS_S3 = 'aws_s3';
+    const STORAGE_TYPE_LOCAL_STORAGE = 'local';
+
     /**
      * Path to store config where count of productattach posts per page is stored
      *

@@ -28,6 +28,8 @@
 
 namespace Prince\Productattach\Block\Adminhtml\Productattach\Edit\Tab;
 
+use Prince\Productattach\Helper\Data;
+
 /**
  * Class Main
  * @package Prince\Productattach\Block\Adminhtml\Productattach\Edit\Tab
@@ -123,6 +125,21 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'disabled' => $isElementDisabled
             ]
         );
+
+        $fieldset->addField(
+            'storage_type',
+            'select',
+            [
+                'name' => 'storage_type',
+                'label' => __('Storage Type'),
+                'title' => __('Storage Type'),
+                'options' => [
+                    Data::STORAGE_TYPE_AWS_S3 => 'AWS S3',
+                    Data::STORAGE_TYPE_LOCAL_STORAGE => 'Local Storage'
+                ],
+                'disabled' => ($isElementDisabled || $model->getId())
+            ]
+        );
         
         $fieldset->addField(
             'files',
@@ -132,7 +149,7 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'label' => __('File'),
                 'title' => __('File'),
                 'required' => false,
-                'note' => 'File size must be less than 2 Mb.', // TODO: show ACCTUAL file-size
+                'note' => 'File size must be less than 2 Mb.', // TODO: show ACTUAL file-size
                 'disabled' => $isElementDisabled
             ]
         );
