@@ -9,6 +9,9 @@
                 <attachmentsize>1</attachmentsize>
                 <tabname>Product Attachment</tabname>
             </general>
+            <aws_s3_storage>
+                <upload_dir>audio</upload_dir>
+            </aws_s3_storage>
         </productattach>
     </default>
 </config>

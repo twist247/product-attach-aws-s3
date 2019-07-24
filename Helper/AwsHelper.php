@@ -9,6 +9,7 @@ class AwsHelper extends AbstractHelper
     const XML_PATH_ACCESS_KEY  = 'productattach/aws_s3_storage/access_key';
     const XML_PATH_SECRET_KEY  = 'productattach/aws_s3_storage/secret_key';
     const XML_PATH_BUCKET_NAME = 'productattach/aws_s3_storage/bucket_name';
+    const XML_PATH_UPLOAD_DIR  = 'productattach/aws_s3_storage/upload_Dir';
 
     public function getAccessKey()
     {
@@ -23,5 +24,10 @@ class AwsHelper extends AbstractHelper
     public function getBucketName()
     {
         return $this->scopeConfig->getValue(self::XML_PATH_BUCKET_NAME, 'store');
+    }
+
+    public function getUploadDir()
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_UPLOAD_DIR, 'store');
     }
 }
