@@ -29,6 +29,8 @@
 namespace Prince\Productattach\Helper;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\LocalizedException;
+use Prince\Productattach\Model\Storage\Adapter\AwsAdapter;
 
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -77,11 +79,18 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     private $backendUrl;
 
     /**
+     * @var AwsAdapter 
+     */
+    private $awsAdapter;
+
+    /**
+     * Data constructor.
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Backend\Model\UrlInterface $backendUrl
      * @param \Magento\Framework\Filesystem $filesystem
      * @param \Magento\MediaStorage\Model\File\UploaderFactory $fileUploaderFactory
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param AwsAdapter $awsAdapter
      * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function __construct(
@@ -89,38 +98,60 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Backend\Model\UrlInterface $backendUrl,
         \Magento\Framework\Filesystem $filesystem,
         \Magento\MediaStorage\Model\File\UploaderFactory $fileUploaderFactory,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        AwsAdapter $awsAdapter
     ) {
         $this->backendUrl = $backendUrl;
         $this->filesystem = $filesystem;
         $this->mediaDirectory = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         $this->fileUploaderFactory = $fileUploaderFactory;
         $this->storeManager = $storeManager;
+        $this->awsAdapter = $awsAdapter;
         parent::__construct($context);
     }
-    
+
     /**
      * Upload image and return uploaded image file name or false
      *
-     * @param string $scope the request key for file
-     * @return bool|string
+     * @param $scope
+     * @param $model
+     * @return mixed
+     * @throws LocalizedException
      */
     public function uploadFile($scope, $model)
     {
-        try {
+        if ($model->getStorageType() == self::STORAGE_TYPE_AWS_S3) {
+            if (!isset($_FILES[$scope]['tmp_name'])
+                || !isset($_FILES[$scope]['name'])
+            ) {
+                throw new LocalizedException(__('No file to upload'));
+            }
+
+            $result = $this->awsAdapter->uploadFile(
+                $_FILES[$scope]['tmp_name'],
+                $_FILES[$scope]['name']
+            );
+
+            $objectUrl = $result->get('ObjectURL');
+            if (!$objectUrl) {
+                throw new LocalizedException(__('Error occurred when uploading the file'));
+            }
+
+            $model->setFile($objectUrl);
+            $model->setFileExt(pathinfo($_FILES[$scope]['name'], PATHINFO_EXTENSION));
+        } else {
             $uploader = $this->fileUploaderFactory->create(['fileId' => $scope]);
             $uploader->setAllowedExtensions($this->getAllowedExt());
             $uploader->setAllowRenameFiles(true);
             $uploader->setFilesDispersion(true);
             $uploader->setAllowCreateFolders(true);
-            
+
             if ($uploader->save($this->getBaseDir())) {
                 $model->setFile($uploader->getUploadedFileName());
                 $model->setFileExt($uploader->getFileExtension());
             }
-        } catch (\Exception $e) {
-
         }
+
 
         return $model;
     }
