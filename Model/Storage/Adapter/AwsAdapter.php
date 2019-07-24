@@ -37,7 +37,7 @@ class AwsAdapter
     {
         $client = $this->getClient();
         $result = $client->putObject([
-            'Bucket' => $this->helper->getAwsBucketName(),
+            'Bucket' => $this->helper->getBucketName(),
             'Key' => $destination,
             'SourceFile' => $source,
             'ACL' => 'public-read'
@@ -70,10 +70,10 @@ class AwsAdapter
     private function initCredentials()
     {
         if (!getenv(CredentialProvider::ENV_KEY)) {
-            putenv(CredentialProvider::ENV_KEY . '=' . $this->helper->getAwsAccessKey());
+            putenv(CredentialProvider::ENV_KEY . '=' . $this->helper->getAccessKey());
         }
         if (!getenv(CredentialProvider::ENV_SECRET)) {
-            putenv(CredentialProvider::ENV_SECRET . '=' . $this->helper->getAwsSecretKey());
+            putenv(CredentialProvider::ENV_SECRET . '=' . $this->helper->getSecretKey());
         }
     }
 }

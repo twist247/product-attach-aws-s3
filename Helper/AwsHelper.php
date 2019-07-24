@@ -6,22 +6,22 @@ use Magento\Framework\App\Helper\AbstractHelper;
 
 class AwsHelper extends AbstractHelper
 {
-    const XML_PATH_AWS_ACCESS_KEY  = 'productattach/aws_s3_storage/access_key';
-    const XML_PATH_AWS_SECRET_KEY  = 'productattach/aws_s3_storage/secret_key';
-    const XML_PATH_AWS_BUCKET_NAME = 'productattach/aws_s3_storage/bucket_name';
+    const XML_PATH_ACCESS_KEY  = 'productattach/aws_s3_storage/access_key';
+    const XML_PATH_SECRET_KEY  = 'productattach/aws_s3_storage/secret_key';
+    const XML_PATH_BUCKET_NAME = 'productattach/aws_s3_storage/bucket_name';
 
-    public function getAwsAccessKey()
+    public function getAccessKey()
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_AWS_ACCESS_KEY, 'store');
+        return $this->scopeConfig->getValue(self::XML_PATH_ACCESS_KEY, 'store');
     }
 
-    public function getAwsSecretKey()
+    public function getSecretKey()
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_AWS_SECRET_KEY, 'store');
+        return $this->scopeConfig->getValue(self::XML_PATH_SECRET_KEY, 'store');
     }
 
-    public function getAwsBucketName()
+    public function getBucketName()
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_AWS_BUCKET_NAME, 'store');
+        return $this->scopeConfig->getValue(self::XML_PATH_BUCKET_NAME, 'store');
     }
 }

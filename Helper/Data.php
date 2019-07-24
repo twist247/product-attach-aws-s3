@@ -79,7 +79,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     private $backendUrl;
 
     /**
-     * @var AwsAdapter 
+     * @var AwsAdapter
      */
     private $awsAdapter;
 
@@ -127,10 +127,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                 throw new LocalizedException(__('No file to upload'));
             }
 
-            $result = $this->awsAdapter->uploadFile(
-                $_FILES[$scope]['tmp_name'],
-                $_FILES[$scope]['name']
-            );
+            $sourceFile = $_FILES[$scope]['tmp_name'];
+            $destinationFile = $_FILES[$scope]['name'];
+
+            $result = $this->awsAdapter->uploadFile($sourceFile, $destinationFile);
 
             $objectUrl = $result->get('ObjectURL');
             if (!$objectUrl) {
@@ -138,7 +138,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             }
 
             $model->setFile($objectUrl);
-            $model->setFileExt(pathinfo($_FILES[$scope]['name'], PATHINFO_EXTENSION));
+            $model->setFileExt(pathinfo($destinationFile, PATHINFO_EXTENSION));
         } else {
             $uploader = $this->fileUploaderFactory->create(['fileId' => $scope]);
             $uploader->setAllowedExtensions($this->getAllowedExt());
