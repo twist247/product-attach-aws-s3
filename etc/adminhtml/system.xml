@@ -43,7 +43,7 @@
                 <field id="bucket_name" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Bucket Name</label>
                 </field>
-                <field id="upload_dir" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="upload_dir" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Upload Dir</label>
                 </field>
             </group>

@@ -36,6 +36,11 @@ class AwsAdapter
     public function uploadFile($source, $destination)
     {
         $client = $this->getClient();
+
+        if ($uploadDir = $this->helper->getUploadDir()) {
+            $destination = rtrim($uploadDir, '/') . '/' . $destination;
+        }
+
         $result = $client->putObject([
             'Bucket' => $this->helper->getBucketName(),
             'Key' => $destination,
