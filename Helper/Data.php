@@ -121,10 +121,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function uploadFile($scope, $model)
     {
         if ($model->getStorageType() == self::STORAGE_TYPE_AWS_S3) {
-            if (!isset($_FILES[$scope]['tmp_name'])
-                || !isset($_FILES[$scope]['name'])
+            if (empty($_FILES[$scope])
+                || empty($_FILES[$scope]['tmp_name'])
+                || empty($_FILES[$scope]['name'])
             ) {
-                throw new LocalizedException(__('No file to upload'));
+                return $model;
             }
 
             $sourceFile = $_FILES[$scope]['tmp_name'];
@@ -137,7 +138,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                 throw new LocalizedException(__('Error occurred when uploading the file'));
             }
 
-            $model->setFile($objectUrl);
+            $model->setUrl($objectUrl);
             $model->setFileExt(pathinfo($destinationFile, PATHINFO_EXTENSION));
         } else {
             $uploader = $this->fileUploaderFactory->create(['fileId' => $scope]);

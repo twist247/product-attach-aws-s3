@@ -69,7 +69,11 @@ class Download extends \Magento\Ui\Component\Listing\Columns\Column
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as & $item) {
                 if (isset($item['file'])) {
-                    $url = $this->urlBuilder->getBaseUrl().'pub/media/productattach'.$item['file'];
+                    if (!empty($item['url'])) {
+                        $url = $item['url'];
+                    } else {
+                        $url = $this->urlBuilder->getBaseUrl() . 'pub/media/productattach' . $item['file'];
+                    }
                     $item[$this->getData('name')] = [
                         'edit' => [
                             'href' => $url,
